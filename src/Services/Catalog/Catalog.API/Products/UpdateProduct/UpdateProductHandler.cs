@@ -4,7 +4,7 @@ using Catalog.API.Products.DeleteProduct;
 namespace Catalog.API.Products.UpdateProduct
 {
     public record UpdateProductCommand(Guid Id, string Name, List<string> Category, string Description, string ImageFile, decimal Price) : ICommand<UpdateProductResult>;
-    public record UpdateProductResult(string Confirmation);
+    public record UpdateProductResult(string? Confirmation);
 
     public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand>
     {
@@ -31,10 +31,10 @@ namespace Catalog.API.Products.UpdateProduct
 
     public class UpdateProductHandler(IDocumentSession session) : ICommandHandler<UpdateProductCommand, UpdateProductResult>
     {
-        public async Task<UpdateProductResult?> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
+        public async Task<UpdateProductResult> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
         {
             var existingProduct = await session.LoadAsync<Product>(command.Id, cancellationToken);
-            if (existingProduct is null) return null;
+            if (existingProduct is null) return new UpdateProductResult(null);
 
             existingProduct = command.Adapt<Product>();
             session.Update(existingProduct);

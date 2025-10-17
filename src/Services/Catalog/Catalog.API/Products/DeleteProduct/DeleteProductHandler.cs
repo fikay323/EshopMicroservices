@@ -2,7 +2,8 @@
 namespace Catalog.API.Products.DeleteProduct
 {
     public record DeleteProductCommand(Guid Id) : ICommand<DeleteProductResult>;
-    public record DeleteProductResult();
+
+    public record DeleteProductResult;
 
     public class DeleteProductHandler(IDocumentSession session) : ICommandHandler<DeleteProductCommand, DeleteProductResult>
     {

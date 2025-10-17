@@ -12,13 +12,13 @@
                 var query = new GetProductByIdQuery(id);
                 var result = await sender.Send(query);
 
-                if (result is null) return Results.NotFound("Product not found");
+                if (result.Product is null) return Results.NotFound("Product not found");
                 var response = result.Adapt<GetProductByIdResponse>();
 
                 return Results.Ok(response.Product);
             })
                 .WithName("GetProductById")
-                .Produces<GetProductByIdResponse>(StatusCodes.Status200OK)
+                .Produces<GetProductByIdResponse>()
                 .ProducesProblem(StatusCodes.Status404NotFound)
                 .WithSummary("Get Product By Id")
                 .WithDescription("Retrieves a single product using its unique identifier.");

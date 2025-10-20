@@ -27,10 +27,19 @@ builder.Services.AddStackExchangeRedisCache(options =>
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("Database")!)
+    .AddRedis(builder.Configuration.GetConnectionString("Redis")!);
+
 var app = builder.Build();
 
 app.MapCarter();
 
 app.UseExceptionHandler(options => { });
+
+app.UseHealthChecks("/health", new HealthCheckOptions()
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.Run();

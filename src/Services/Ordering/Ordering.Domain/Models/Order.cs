@@ -10,7 +10,7 @@ public class Order : Aggregate<OrderId>
     public Address ShippingAddress { get; private set; } = null!;
     public Address BillingAddress { get; private set; } = null!;
     public Payment Payment { get; private set; } = null!;
-    public OrderStatus Status { get; private set; } = OrderStatus.Pending;
+    public OrderStatus Status { get; private set; } = OrderStatus.Draft;
     
     public decimal TotalPrice {
         get => OrderItems.Sum(x => x.Price * x.Quantity);

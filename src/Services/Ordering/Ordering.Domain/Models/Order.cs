@@ -34,17 +34,6 @@ public class Order : Aggregate<OrderId>
 
         return order;
     }
-    
-    public void Update(OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment, OrderStatus status)
-    {
-        OrderName = orderName;
-        ShippingAddress = shippingAddress;
-        BillingAddress = billingAddress;
-        Payment = payment;
-        Status = status;
-
-        AddDomainEvent(new OrderUpdatedEvent(this));
-    }
 
     public void Add(ProductId productId, int quantity, decimal price)
     {
@@ -55,12 +44,56 @@ public class Order : Aggregate<OrderId>
         _orderItems.Add(orderItem);
     }
 
+    public void UpdateOrderName(OrderName orderName)
+    {
+        OrderName = orderName;
+        AddOrderUpdatedEvent();
+    }
+
+    public void UpdateShippingAddress(Address newAddress)
+    {
+        if (Status != OrderStatus.Draft && Status != OrderStatus.Pending)
+        {
+            throw new InvalidOperationException("Cannot change shipping address once order is processed.");
+        }
+
+        ShippingAddress = newAddress;
+        AddOrderUpdatedEvent();
+    }
+
+    public void UpdateBillingAddress(Address newAddress)
+    {
+        BillingAddress = newAddress;
+        AddOrderUpdatedEvent();
+    }
+
+    public void UpdatePayment(Payment newPayment)
+    {
+        Payment = newPayment;
+        AddOrderUpdatedEvent();
+    }
+    public void UpdateStatus(OrderStatus status) 
+    {
+        Status = status;
+        AddOrderUpdatedEvent();
+    }
+
     public void Remove(ProductId productId)
     {
         var orderItem = _orderItems.FirstOrDefault(x => x.ProductId == productId);
         if (orderItem is not null)
         {
             _orderItems.Remove(orderItem);
+        }
+    }
+    
+    private void AddOrderUpdatedEvent()
+    {
+        var hasEvent = DomainEvents.OfType<OrderUpdatedEvent>().Any();
+
+        if (!hasEvent)
+        {
+            AddDomainEvent(new OrderUpdatedEvent(this));
         }
     }
 }

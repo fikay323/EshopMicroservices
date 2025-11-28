@@ -27,10 +27,11 @@ public class DispatchDomainEventsInterceptor(IMediator mediator): SaveChangesInt
             .Where(a => a.Entity.DomainEvents.Any())
             .Select(a => a.Entity);
 
-        var domainEvents = aggregates.SelectMany(a => a.DomainEvents)
+        var enumerable = aggregates.ToList();
+        var domainEvents = enumerable.SelectMany(a => a.DomainEvents)
             .ToList();
         
-        aggregates.ToList().ForEach(a => a.ClearDomainEvents());
+        enumerable.ToList().ForEach(a => a.ClearDomainEvents());
 
         foreach (var events in domainEvents)
         {

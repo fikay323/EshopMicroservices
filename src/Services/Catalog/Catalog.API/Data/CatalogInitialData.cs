@@ -28,7 +28,7 @@ public class CatalogInitialData() : IInitialData
         {
             Id = new Guid("c67d6323-e8b1-4bdf-9a75-b0d0d2e7e914"),
             Name = "Samsung 10",
-            Description = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
+            Description = "This phone is the company's biggest change to its flagship smarphone in years. It includes a borderless.",
             ImageFile = "product-2.png",
             Price = 840.00M,
             Category = new List<string> { "Smart Phone" }

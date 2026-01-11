@@ -40,6 +40,8 @@ public class CustomExceptionHandler
         {
             problemDetails.Extensions.Add("ValidationErrors", validationException.Errors);
         }
+        
+        context.Response.StatusCode = details.StatusCode;
 
         await context.Response.WriteAsJsonAsync(problemDetails, cancellationToken: cancellationToken);
         return true;

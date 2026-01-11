@@ -7,6 +7,8 @@ public class DeleteOrderHandler(IApplicationDbContext dbContext): ICommandHandle
         var order = new Order { Id = OrderId.Of(command.OrderId)};
         dbContext.Orders.Remove(order);
         var affectedRows = await dbContext.SaveChangesAsync(cancellationToken);
+        
+        Console.WriteLine("affected: {affectedRows}", affectedRows);
 
         return affectedRows == 0 
             ? throw new OrderNotFoundException(command.OrderId)
